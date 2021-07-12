@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<script>
+
+// url Async requesting function
+function httpGetAsync(theUrl, callback)
+{
+    // create the request object
+    var xmlHttp = new XMLHttpRequest();
+
+    // set the state change callback to capture when the response comes in
+    xmlHttp.onreadystatechange = function()
+    {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        {
+            callback(xmlHttp.responseText);
+        }
+    }
+
+    // open as a GET call, pass in the url and set async = True
+    xmlHttp.open("GET", theUrl, true);
+
+    // call send with no params as they were passed in on the url string
+    xmlHttp.send(null);
+
+    return;
+}
+
+// callback for share event
+function tenorCallback_searchSuggestion(responsetext)
+{
+    var response_objects = JSON.parse(responsetext);
+
+    predicted_words = response_objects["results"];
+
+    document.getElementById("ac_1").innerHTML = predicted_words[0];
+    document.getElementById("ac_2").innerHTML = predicted_words[1];
+    document.getElementById("ac_3").innerHTML = predicted_words[2];
+    document.getElementById("ac_4").innerHTML = predicted_words[3];
+}
+
+
+// SUPPORT FUNCTIONS ABOVE
+// MAIN BELOW
+
+//search term
+psearch_term = "smile";
+
+// set the apikey and limit
+var apikey = "OUXM9BQB1TTQ";
+var lmt = 5;
+
+// using default locale of en_US
+var autoc_url = "https://g.tenor.com/v1/search_suggestions?key=" + apikey + "&q=" + psearch_term
+    + "&limit=" + lmt;
+
+// send search suggestion request
+httpGetAsync(autoc_url,tenorCallback_searchSuggestion);
+
+
+</script>
+
+<body>
+
+<h2>Search Suggestion for "smile":</h2>
+<h3 id = "ac_1"></h3>
+<h3 id = "ac_2"></h3>
+<h3 id = "ac_3"></h3>
+<h3 id = "ac_4"></h3>
+
+</body>
+</html>
